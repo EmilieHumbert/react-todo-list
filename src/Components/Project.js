@@ -3,18 +3,18 @@ import List from "./List";
 
 function Project() {
   const [input, setInput] = useState("");
-  const [list, setList] = useState([]);
+  const [list, setList] = useState([{ text: "Example todo", complete: false }]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setList([...list, input]);
+    setList([...list, { text: input, complete: false }]);
     setInput("");
   };
 
   return (
     <div>
       <h2>To do:</h2>
-      <List data={list} />
+      <List list={list} setList={setList} />
       <form onSubmit={handleSubmit}>
         <input
           type="text"

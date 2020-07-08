@@ -1,10 +1,22 @@
 import React from "react";
 
-function List({ data }) {
+function List({ list, setList }) {
+  function handleChecked(todo) {
+    const updatedTodo = { ...todo, complete: !todo.complete };
+    setList(list.map((item) => (item === todo ? updatedTodo : item)));
+  }
+
   return (
     <ul>
-      {data.map((todo) => (
-        <li>{todo}</li>
+      {list.map((todo) => (
+        <li>
+          <input
+            type="checkbox"
+            checked={todo.complete}
+            onChange={() => handleChecked(todo)}
+          />
+          {todo.text}
+        </li>
       ))}
     </ul>
   );
