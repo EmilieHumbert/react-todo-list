@@ -6,8 +6,10 @@ function Form({ list, setList }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setList([...list, { id: generateId(), text: input, complete: false }]);
-    setInput("");
+    if (input.length > 0) {
+      setList([...list, { id: generateId(), text: input, complete: false }]);
+      setInput("");
+    }
   };
 
   return (
