@@ -1,4 +1,5 @@
 import React from "react";
+import DeleteButton from "./DeleteButton";
 
 function ListItem({ todo, list, setList }) {
   function handleChecked(todo) {
@@ -6,9 +7,6 @@ function ListItem({ todo, list, setList }) {
     setList(list.map((item) => (item === todo ? updatedTodo : item)));
   }
 
-  function handleDelete(todo) {
-    setList(list.filter((item) => item !== todo));
-  }
   return (
     <li>
       <input
@@ -17,7 +15,7 @@ function ListItem({ todo, list, setList }) {
         onChange={() => handleChecked(todo)}
       />
       {todo.text}
-      <button onClick={() => handleDelete(todo)}>Delete</button>
+      <DeleteButton todo={todo} list={list} setList={setList} />
     </li>
   );
 }
