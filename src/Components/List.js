@@ -6,6 +6,10 @@ function List({ list, setList }) {
     setList(list.map((item) => (item === todo ? updatedTodo : item)));
   }
 
+  function handleDelete(todo) {
+    setList(list.filter((item) => item !== todo));
+  }
+
   return (
     <ul>
       {list.map((todo) => (
@@ -16,6 +20,7 @@ function List({ list, setList }) {
             onChange={() => handleChecked(todo)}
           />
           {todo.text}
+          <button onClick={() => handleDelete(todo)}>Delete</button>
         </li>
       ))}
     </ul>
