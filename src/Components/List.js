@@ -13,7 +13,7 @@ function List({ list, setList }) {
   return (
     <ul>
       {list.map((todo) => (
-        <li>
+        <li key={todo.id}>
           <input
             type="checkbox"
             checked={todo.complete}

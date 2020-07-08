@@ -1,13 +1,14 @@
 import React, { useState } from "react";
+import { generate as generateId } from "shortid";
 import List from "./List";
 
 function Project() {
   const [input, setInput] = useState("");
-  const [list, setList] = useState([{ text: "Example todo", complete: false }]);
+  const [list, setList] = useState([{ id: generateId(), text: "Example todo", complete: false }]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setList([...list, { text: input, complete: false }]);
+    setList([...list, { id: generateId(), text: input, complete: false }]);
     setInput("");
   };
 
