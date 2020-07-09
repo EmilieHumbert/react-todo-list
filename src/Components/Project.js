@@ -4,7 +4,6 @@ import List from "./List";
 import Form from "./Form";
 
 function Project() {
-
   const [list, setList] = useState([
     { id: generateId(), text: "Example todo", complete: false },
   ]);
