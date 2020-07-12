@@ -1,8 +1,20 @@
 import React from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { List as MuiList, Paper } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Form from "./Form";
 import ListItem from "./ListItem";
 
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
 function List({ list, setList }) {
+  const classes = useStyles();
+
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
     // do nothing when dragging outside container
@@ -17,7 +29,7 @@ function List({ list, setList }) {
     ) {
       return;
     }
-    
+
     // find element in array that has same id as element dragged
     const movedItem = list.find((item) => item.id === draggableId);
     // remove the moved item from the list array
@@ -35,24 +47,27 @@ function List({ list, setList }) {
   };
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="hello">
-        {(provided) => (
-          <ul ref={provided.innerRef} {...provided.droppableProps}>
-            {list.map((todo, index) => (
-              <ListItem
-                key={todo.id}
-                todo={todo}
-                list={list}
-                setList={setList}
-                index={index}
-              />
-            ))}
-            {provided.placeholder}
-          </ul>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <Paper className={classes.root}>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="hello">
+          {(provided) => (
+            <MuiList ref={provided.innerRef} {...provided.droppableProps}>
+              {list.map((todo, index) => (
+                <ListItem
+                  key={todo.id}
+                  todo={todo}
+                  list={list}
+                  setList={setList}
+                  index={index}
+                />
+              ))}
+              {provided.placeholder}
+              <Form list={list} setList={setList} />
+            </MuiList>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </Paper>
   );
 }
 

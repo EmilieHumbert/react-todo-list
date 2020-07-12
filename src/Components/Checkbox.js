@@ -1,4 +1,5 @@
 import React from "react";
+import { Checkbox as MuiCheckbox } from "@material-ui/core";
 
 function Checkbox({ todo, setList, list }) {
   function handleChecked(todo) {
@@ -6,11 +7,7 @@ function Checkbox({ todo, setList, list }) {
     setList(list.map((item) => (item === todo ? updatedTodo : item)));
   }
   return (
-    <input
-      type="checkbox"
-      checked={todo.complete}
-      onChange={() => handleChecked(todo)}
-    />
+    <MuiCheckbox checked={todo.complete} onChange={() => handleChecked(todo)} />
   );
 }
 

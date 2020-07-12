@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { generate as generateId } from "shortid";
 import List from "./List";
-import Form from "./Form";
+import { Container, Typography } from "@material-ui/core";
 
 function Project() {
   const [list, setList] = useState([
@@ -9,11 +9,12 @@ function Project() {
   ]);
 
   return (
-    <div>
-      <h2>To do:</h2>
+    <Container maxWidth="sm">
+      <Typography variant="h2" component="h1" gutterBottom>
+        To do:
+      </Typography>
       <List list={list} setList={setList} />
-      <Form list={list} setList={setList} />
-    </div>
+    </Container>
   );
 }
 

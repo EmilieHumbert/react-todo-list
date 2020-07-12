@@ -1,5 +1,10 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
+import {
+  ListItem as MuiListItem,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
 import DeleteButton from "./DeleteButton";
 import Checkbox from "./Checkbox";
 
@@ -7,15 +12,19 @@ function ListItem({ todo, list, setList, index }) {
   return (
     <Draggable draggableId={todo.id} index={index}>
       {(provided) => (
-        <li
+        <MuiListItem
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           ref={provided.innerRef}
         >
-          <Checkbox todo={todo} list={list} setList={setList} />
-          {todo.text}
-          <DeleteButton todo={todo} list={list} setList={setList} />
-        </li>
+          <ListItemIcon>
+            <Checkbox todo={todo} list={list} setList={setList} />
+          </ListItemIcon>
+          <ListItemText>{todo.text}</ListItemText>
+          <ListItemIcon>
+            <DeleteButton todo={todo} list={list} setList={setList} />
+          </ListItemIcon>
+        </MuiListItem>
       )}
     </Draggable>
   );
