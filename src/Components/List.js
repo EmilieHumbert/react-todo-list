@@ -1,20 +1,11 @@
 import React from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { List as MuiList, Paper } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { List as MuiList } from "@material-ui/core";
+
 import Form from "./Form";
 import ListItem from "./ListItem";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
 function List({ list, setList }) {
-  const classes = useStyles();
-
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
     // do nothing when dragging outside container
@@ -47,27 +38,25 @@ function List({ list, setList }) {
   };
 
   return (
-    <Paper className={classes.root}>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="hello">
-          {(provided) => (
-            <MuiList ref={provided.innerRef} {...provided.droppableProps}>
-              {list.map((todo, index) => (
-                <ListItem
-                  key={todo.id}
-                  todo={todo}
-                  list={list}
-                  setList={setList}
-                  index={index}
-                />
-              ))}
-              {provided.placeholder}
-              <Form list={list} setList={setList} />
-            </MuiList>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </Paper>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="hello">
+        {(provided) => (
+          <MuiList ref={provided.innerRef} {...provided.droppableProps}>
+            {list.map((todo, index) => (
+              <ListItem
+                key={todo.id}
+                todo={todo}
+                list={list}
+                setList={setList}
+                index={index}
+              />
+            ))}
+            {provided.placeholder}
+            <Form list={list} setList={setList} />
+          </MuiList>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 }
 

@@ -1,20 +1,34 @@
-import React, { useState } from "react";
-import { generate as generateId } from "shortid";
-import List from "./List";
-import { Container, Typography } from "@material-ui/core";
+import React from "react";
+import { Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
-function Project() {
-  const [list, setList] = useState([
-    { id: generateId(), text: "Example todo", complete: false },
-  ]);
+import List from "./List";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+function Project({ project, setProject }) {
+  const classes = useStyles();
+  const { title, list } = project;
 
   return (
-    <Container maxWidth="sm">
-      <Typography variant="h2" component="h1" gutterBottom>
-        To do:
-      </Typography>
-      <List list={list} setList={setList} />
-    </Container>
+    <div>
+      <form className={classes.title} noValidate autoComplete="off">
+        <Typography variant="h5" align="left" component="h2" gutterBottom>
+          {title}
+        </Typography>
+      </form>
+      <List
+        list={list}
+        setList={(updatedList) =>
+          setProject({ ...project, list: [...updatedList] })
+        }
+      />
+    </div>
   );
 }
 
