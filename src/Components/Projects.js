@@ -3,6 +3,9 @@ import { generate as generateId } from "shortid";
 import { Tabs, Tab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { AddCircleOutline as AddCircleOutlineIcon } from "@material-ui/icons";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+import { reorderList } from "../utils/drag-drop";
 
 import Project from "./Project";
 
@@ -55,7 +58,7 @@ function Projects() {
     },
   ]);
 
-  const handleChange = (event, newValue) => {
+  const handleTabClick = (newValue) => {
     setActive(newValue);
   };
 
@@ -66,25 +69,64 @@ function Projects() {
       list: [],
     };
     setProjects([...projects, newProject]);
+    setActive(projects.length);
+  };
+
+  // drag & drop
+  const onDragEnd = (result) => {
+    reorderList(result, projects, setProjects);
+    // if active tab dragged then activate new index
+    if (active === result.source.index) {
+      setActive(result.destination.index);
+    }
   };
 
   return (
     <div className={classes.root}>
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={active}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        className={classes.lefttabs}
-      >
-        {projects.map(({ id, title }) => (
-          <Tab key={id} label={title} {...a11yProps(0)} />
-        ))}
-        <Tab icon={<AddCircleOutlineIcon />} onClick={handleAddProject} />
-      </Tabs>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="abc">
+          {(provided) => (
+            <Tabs
+              orientation="vertical"
+              variant="scrollable"
+              value={active}
+              aria-label="Vertical tabs example"
+              className={classes.lefttabs}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {projects.map(({ id, title }, index) => (
+                <Draggable key={id} draggableId={id} index={index}>
+                  {(provided) => (
+                    <Tab
+                      component="div"
+                      label={title}
+                      {...a11yProps(index)}
+                      onClick={() => handleTabClick(index)}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              <Tab
+                component="div"
+                icon={<AddCircleOutlineIcon />}
+                onClick={handleAddProject}
+              />
+            </Tabs>
+          )}
+        </Droppable>
+      </DragDropContext>
       {projects.map((project, index) => (
-        <TabPanel key={project.id} value={active} index={index} className={classes.tabpanel}>
+        <TabPanel
+          key={project.id}
+          value={active}
+          index={index}
+          className={classes.tabpanel}
+        >
           <Project
             project={project}
             setProject={(updatedProject) =>
