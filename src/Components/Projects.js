@@ -34,10 +34,12 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: 224,
   },
-  tabs: {
+  lefttabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
+  },
+  tabpanel: {
+    width: "100%",
   },
 }));
 
@@ -61,7 +63,7 @@ function Projects() {
       id: generateId(),
       title: "New Project",
       list: [],
-    }
+    };
     setProjects([...projects, newProject]);
   };
 
@@ -73,7 +75,7 @@ function Projects() {
         value={active}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        className={classes.tabs}
+        className={classes.lefttabs}
       >
         {projects.map(({ id, title }) => (
           <Tab key={id} label={title} {...a11yProps(0)} />
@@ -81,7 +83,7 @@ function Projects() {
         <Tab label="Add new" onClick={handleAddProject} />
       </Tabs>
       {projects.map((project, index) => (
-        <TabPanel key={project.id} value={active} index={index}>
+        <TabPanel key={project.id} value={active} index={index} className={classes.tabpanel}>
           <Project
             project={project}
             setProject={(updatedProject) =>

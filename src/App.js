@@ -16,7 +16,7 @@ function App() {
   const classes = useStyles();
   return (
     <div className="App">
-      <Container maxWidth="sm">
+      <Container maxWidth="md">
         <Typography variant="h2" component="h1" gutterBottom>
           To do:
         </Typography>
