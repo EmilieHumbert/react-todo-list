@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { generate as generateId } from "shortid";
 import { Tabs, Tab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { AddCircleOutline as AddCircleOutlineIcon } from "@material-ui/icons";
 
 import Project from "./Project";
 
@@ -80,7 +81,7 @@ function Projects() {
         {projects.map(({ id, title }) => (
           <Tab key={id} label={title} {...a11yProps(0)} />
         ))}
-        <Tab label="Add new" onClick={handleAddProject} />
+        <Tab icon={<AddCircleOutlineIcon />} onClick={handleAddProject} />
       </Tabs>
       {projects.map((project, index) => (
         <TabPanel key={project.id} value={active} index={index} className={classes.tabpanel}>
