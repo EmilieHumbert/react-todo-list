@@ -138,6 +138,9 @@ function Projects() {
                 )
               )
             }
+            projects={projects}
+            setProjects={setProjects}
+            setActive={setActive}
           />
         </TabPanel>
       ))}

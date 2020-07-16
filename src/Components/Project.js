@@ -1,7 +1,7 @@
 import React from "react";
-import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
+import DeleteButton from "../Components/DeleteButton";
 import List from "./List";
 
 const useStyles = makeStyles((theme) => ({
@@ -11,16 +11,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Project({ project, setProject }) {
+function Project({ project, setProject, projects, setProjects, setActive }) {
   const classes = useStyles();
   const { title, list } = project;
 
   return (
     <div>
       <form className={classes.title} noValidate autoComplete="off">
-        <Typography variant="h5" align="left" component="h2" gutterBottom>
+        <div>
           {title}
-        </Typography>
+          <DeleteButton todo={project} list={projects} setList={setProjects} setActive={setActive} />
+        </div>
       </form>
       <List
         list={list}
