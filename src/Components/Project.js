@@ -5,7 +5,7 @@ import {
   Clear as ClearIcon,
   Edit as EditIcon,
 } from "@material-ui/icons";
-import { Box, TextField, Typography } from "@material-ui/core";
+import { Box, TextField, Typography, IconButton } from "@material-ui/core";
 
 import DeleteButton from "./DeleteButton";
 import List from "./List";
@@ -20,23 +20,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Project({
-  project,
-  setProject,
-  projects,
-  setProjects,
-  setActive,
-}) {
+function Project({ project, setProject, projects, setProjects, setActive }) {
   const classes = useStyles();
   const { title, list } = project;
   const [input, setInput] = useState(title);
   const [editTitle, setEditTitle] = useState(false);
 
   const handleEditClick = () => setEditTitle(!editTitle);
+
   const handleEditCancel = () => {
     setEditTitle(false);
     setInput(title);
   };
+
   const handleEditSubmit = () => {
     const updateTitle = input.length > 0 ? input : "[Untitled]";
     setEditTitle(false);
@@ -64,8 +60,12 @@ function Project({
               onChange={handleTitleChange}
               onKeyPress={(e) => e.key === "Enter" && handleEditSubmit()}
             />
-            <CheckIcon color="primary" onClick={handleEditSubmit} />
-            <ClearIcon color="error" onClick={handleEditCancel} />
+            <IconButton onClick={handleEditSubmit}>
+              <CheckIcon color="primary" />
+            </IconButton>
+            <IconButton onClick={handleEditCancel}>
+              <ClearIcon color="error" />
+            </IconButton>
           </>
         ) : (
           <>
@@ -78,7 +78,9 @@ function Project({
             >
               {title}
             </Typography>
-            <EditIcon color="primary" fontSize="small" onClick={handleEditClick} />
+            <IconButton onClick={handleEditClick}>
+              <EditIcon color="primary" fontSize="small" />
+            </IconButton>
           </>
         )}
         <DeleteButton
