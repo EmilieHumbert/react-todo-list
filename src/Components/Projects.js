@@ -47,19 +47,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const getDefaultProjects = () => [
+  {
+    id: generateId(),
+    title: "Example Project",
+    list: [{ id: generateId(), text: "Example todo" }],
+  },
+];
+
 function Projects() {
   const classes = useStyles();
-  const [active, setActive] = useState(0);
-  const [projects, setProjects] = useState([
-    {
-      id: generateId(),
-      title: "Example Project",
-      list: [{ id: generateId(), text: "Example todo" }],
-    },
-  ]);
+
+  const storedActive = localStorage && localStorage.getItem("active");
+  const initialActive = storedActive ? Number(storedActive) : 0;
+  const [active, setActive] = useState(initialActive);
+  const setAndStoreActive = (updatedActive) => {
+    localStorage && localStorage.setItem("active", updatedActive);
+    setActive(updatedActive);
+  };
+
+  const storedProjects = localStorage && localStorage.getItem("projects");
+  const initialProjects = storedProjects
+    ? JSON.parse(storedProjects)
+    : getDefaultProjects();
+  const [projects, setProjects] = useState(initialProjects);
+  const setAndStoreProjects = (updatedProjects) => {
+    localStorage &&
+      localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    setProjects(updatedProjects);
+  };
 
   const handleTabClick = (newValue) => {
-    setActive(newValue);
+    setAndStoreActive(newValue);
   };
 
   const handleAddProject = () => {
@@ -68,16 +87,16 @@ function Projects() {
       title: "New Project",
       list: [],
     };
-    setProjects([...projects, newProject]);
-    setActive(projects.length);
+    setAndStoreProjects([...projects, newProject]);
+    setAndStoreActive(projects.length);
   };
 
   // drag & drop
   const onDragEnd = (result) => {
-    reorderList(result, projects, setProjects);
+    reorderList(result, projects, setAndStoreProjects);
     // if active tab dragged then activate new index
     if (active === result.source.index) {
-      setActive(result.destination.index);
+      setAndStoreActive(result.destination.index);
     }
   };
 
@@ -130,7 +149,7 @@ function Projects() {
           <Project
             project={project}
             setProject={(updatedProject) =>
-              setProjects(
+              setAndStoreProjects(
                 projects.map((project) =>
                   project.id === updatedProject.id
                     ? { ...updatedProject, list: [...updatedProject.list] }
@@ -139,8 +158,8 @@ function Projects() {
               )
             }
             projects={projects}
-            setProjects={setProjects}
-            setActive={setActive}
+            setProjects={setAndStoreProjects}
+            setActive={setAndStoreActive}
           />
         </TabPanel>
       ))}
