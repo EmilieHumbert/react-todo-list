@@ -113,7 +113,7 @@ function Projects() {
               {provided.placeholder}
               <Tab
                 component="div"
-                icon={<AddCircleOutlineIcon />}
+                icon={<AddCircleOutlineIcon color="primary" />}
                 onClick={handleAddProject}
               />
             </Tabs>

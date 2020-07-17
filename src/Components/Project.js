@@ -1,35 +1,100 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import {
+  Check as CheckIcon,
+  Clear as ClearIcon,
+  Edit as EditIcon,
+} from "@material-ui/icons";
+import { Box, TextField, Typography } from "@material-ui/core";
 
-import DeleteButton from "../Components/DeleteButton";
+import DeleteButton from "./DeleteButton";
 import List from "./List";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    backgroundColor: theme.palette.background.paper,
+  header: {
+    display: "flex",
+    alignItems: "center",
+  },
+  title: {
+    flexGrow: 1,
   },
 }));
 
-function Project({ project, setProject, projects, setProjects, setActive }) {
+function Project({
+  project,
+  setProject,
+  projects,
+  setProjects,
+  setActive,
+}) {
   const classes = useStyles();
   const { title, list } = project;
+  const [input, setInput] = useState(title);
+  const [editTitle, setEditTitle] = useState(false);
+
+  const handleEditClick = () => setEditTitle(!editTitle);
+  const handleEditCancel = () => {
+    setEditTitle(false);
+    setInput(title);
+  };
+  const handleEditSubmit = () => {
+    const updateTitle = input.length > 0 ? input : "[Untitled]";
+    setEditTitle(false);
+    setProject({
+      ...project,
+      title: updateTitle,
+    });
+    if (input.length === 0) {
+      setInput(updateTitle);
+    }
+  };
+
+  const handleTitleChange = (e) => setInput(e.target.value);
 
   return (
-    <div>
-      <form className={classes.title} noValidate autoComplete="off">
-        <div>
-          {title}
-          <DeleteButton todo={project} list={projects} setList={setProjects} setActive={setActive} />
-        </div>
-      </form>
+    <Box>
+      <Box className={classes.header} p={2}>
+        {editTitle ? (
+          <>
+            <TextField
+              label="Project title"
+              className={classes.title}
+              placeholder="[Untitled]"
+              value={input}
+              onChange={handleTitleChange}
+              onKeyPress={(e) => e.key === "Enter" && handleEditSubmit()}
+            />
+            <CheckIcon color="primary" onClick={handleEditSubmit} />
+            <ClearIcon color="error" onClick={handleEditCancel} />
+          </>
+        ) : (
+          <>
+            <Typography
+              align="left"
+              className={classes.title}
+              component="h2"
+              contentEditable={editTitle}
+              variant="h4"
+            >
+              {title}
+            </Typography>
+            <EditIcon color="primary" fontSize="small" onClick={handleEditClick} />
+          </>
+        )}
+        <DeleteButton
+          todo={project}
+          list={projects}
+          setList={setProjects}
+          setActive={setActive}
+        />
+      </Box>
       <List
         list={list}
         setList={(updatedList) =>
           setProject({ ...project, list: [...updatedList] })
         }
       />
-    </div>
+    </Box>
   );
 }
 

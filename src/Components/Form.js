@@ -41,7 +41,7 @@ function Form({ list, setList }) {
       />
       <ListItemIcon>
         <IconButton onClick={handleSubmit}>
-          <AddCircleOutlineIcon />
+          <AddCircleOutlineIcon color="primary" />
         </IconButton>
       </ListItemIcon>
     </ListItem>
