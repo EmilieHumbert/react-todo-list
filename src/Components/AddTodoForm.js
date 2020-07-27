@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { generate as generateId } from "shortid";
 import {
   IconButton,
   InputBase,
@@ -16,13 +15,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function Form({ list, setList }) {
+function AddTodoForm({ addTodo }) {
   const classes = useStyles();
   const [input, setInput] = useState("");
 
   const handleSubmit = () => {
     if (input.length > 0) {
-      setList([...list, { id: generateId(), text: input, complete: false }]);
+      addTodo(input);
       setInput("");
     }
   };
@@ -48,4 +47,4 @@ function Form({ list, setList }) {
   );
 }
 
-export default Form;
+export default AddTodoForm;

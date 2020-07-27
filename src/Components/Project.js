@@ -8,7 +8,7 @@ import {
 import { Box, TextField, Typography, IconButton } from "@material-ui/core";
 
 import DeleteButton from "./DeleteButton";
-import List from "./List";
+import List from "../redux/containers/List";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -20,9 +20,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Project({ project, setProject, projects, setProjects, setActive }) {
+function Project({ handleDelete, handleEditTitle, project }) {
   const classes = useStyles();
-  const { title, list } = project;
+  const { id, title, list } = project;
   const [input, setInput] = useState(title);
   const [editTitle, setEditTitle] = useState(false);
 
@@ -36,10 +36,7 @@ function Project({ project, setProject, projects, setProjects, setActive }) {
   const handleEditSubmit = () => {
     const updateTitle = input.length > 0 ? input : "[Untitled]";
     setEditTitle(false);
-    setProject({
-      ...project,
-      title: updateTitle,
-    });
+    handleEditTitle(updateTitle);
     if (input.length === 0) {
       setInput(updateTitle);
     }
@@ -83,19 +80,9 @@ function Project({ project, setProject, projects, setProjects, setActive }) {
             </IconButton>
           </>
         )}
-        <DeleteButton
-          todo={project}
-          list={projects}
-          setList={setProjects}
-          setActive={setActive}
-        />
+        <DeleteButton handleDelete={handleDelete} id={project.id} />
       </Box>
-      <List
-        list={list}
-        setList={(updatedList) =>
-          setProject({ ...project, list: [...updatedList] })
-        }
-      />
+      <List list={list} projectId={id} />
     </Box>
   );
 }

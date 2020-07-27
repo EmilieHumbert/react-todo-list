@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Typography, Paper } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
-import Projects from "./Components/Projects";
+import Projects from "./redux/containers/Projects";
 import "./App.css";
 
 const useStyles = makeStyles((theme) => ({

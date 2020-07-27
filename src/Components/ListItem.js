@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListItem({ todo, list, setList, index }) {
+function ListItem({ editTodo, handleDelete, index, todo }) {
   const classes = useStyles();
   const [input, setInput] = useState(todo.text);
   const [editListItem, setEditListItem] = useState(false);
@@ -41,9 +41,8 @@ function ListItem({ todo, list, setList, index }) {
 
   const handleEditSubmit = () => {
     const updateText = input.length > 0 ? input : "[Untitled]";
-    const updatedTodo = { ...todo, text: updateText };
     setEditListItem(false);
-    setList(list.map((item) => (item === todo ? updatedTodo : item)));
+    editTodo(updateText);
     if (input.length === 0) {
       setInput(updateText);
     }
@@ -60,7 +59,7 @@ function ListItem({ todo, list, setList, index }) {
           ref={provided.innerRef}
         >
           <ListItemIcon>
-            <Checkbox todo={todo} list={list} setList={setList} />
+            <Checkbox todo={todo} />
           </ListItemIcon>
 
           {editListItem ? (
@@ -91,7 +90,7 @@ function ListItem({ todo, list, setList, index }) {
                 <EditIcon color="primary" fontSize="small" />
               </IconButton>
             )}
-            <DeleteButton todo={todo} list={list} setList={setList} />
+            <DeleteButton handleDelete={handleDelete} id={todo.id} />
           </ListItemIcon>
         </MuiListItem>
       )}

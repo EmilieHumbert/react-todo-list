@@ -1,27 +1,24 @@
 import React, { useState } from "react";
-import { generate as generateId } from "shortid";
 import { Tabs, Tab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { AddCircleOutline as AddCircleOutlineIcon } from "@material-ui/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-import { reorderList } from "../utils/drag-drop";
-
-import Project from "./Project";
+import Project from "../redux/containers/Project";
 
 // vertical tabs
 function TabPanel(props) {
-  const { children, value, index, ...other } = props;
+  const { children, active, index, ...other } = props;
 
   return (
     <div
       role="tabpanel"
-      hidden={value !== index}
+      hidden={index !== active}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
     >
-      {value === index && children}
+      {index === active && children}
     </div>
   );
 }
@@ -47,57 +44,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const getDefaultProjects = () => [
-  {
-    id: generateId(),
-    title: "Example Project",
-    list: [{ id: generateId(), text: "Example todo" }],
-  },
-];
-
-function Projects() {
+function Projects({ addProject, projects, projectsOrder, reorderProjects }) {
   const classes = useStyles();
 
-  const storedActive = localStorage && localStorage.getItem("active");
-  const initialActive = storedActive ? Number(storedActive) : 0;
-  const [active, setActive] = useState(initialActive);
-  const setAndStoreActive = (updatedActive) => {
-    localStorage && localStorage.setItem("active", updatedActive);
-    setActive(updatedActive);
-  };
+  const [active, setActive] = useState(0);
 
-  const storedProjects = localStorage && localStorage.getItem("projects");
-  const initialProjects = storedProjects
-    ? JSON.parse(storedProjects)
-    : getDefaultProjects();
-  const [projects, setProjects] = useState(initialProjects);
-  const setAndStoreProjects = (updatedProjects) => {
-    localStorage &&
-      localStorage.setItem("projects", JSON.stringify(updatedProjects));
-    setProjects(updatedProjects);
-  };
-
-  const handleTabClick = (newValue) => {
-    setAndStoreActive(newValue);
-  };
-
-  const handleAddProject = () => {
-    const newProject = {
-      id: generateId(),
-      title: "New Project",
-      list: [],
-    };
-    setAndStoreProjects([...projects, newProject]);
-    setAndStoreActive(projects.length);
+  const handleTabClick = (index) => {
+    setActive(index);
   };
 
   // drag & drop
-  const onDragEnd = (result) => {
-    reorderList(result, projects, setAndStoreProjects);
-    // if active tab dragged then activate new index
-    if (active === result.source.index) {
-      setAndStoreActive(result.destination.index);
+  const onDragEnd = (event) => {
+    if (!event.destination) {
+      return;
     }
+
+    reorderProjects(event);
+
+    // if active tab index changes then update
+    if (active === event.source.index) {
+      setActive(event.destination.index);
+    } else if (event.source.index > active && event.destination.index <= active) {
+      setActive(active + 1);
+    } else if (event.source.index < active && event.destination.index >= active) {
+      setActive(active - 1);
+    }
+  };
+
+  const handleAddProject = () => {
+    addProject();
+    setActive(projectsOrder.length);
   };
 
   return (
@@ -114,12 +90,12 @@ function Projects() {
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              {projects.map(({ id, title }, index) => (
+              {projectsOrder.map((id, index) => (
                 <Draggable key={id} draggableId={id} index={index}>
                   {(provided) => (
                     <Tab
                       component="div"
-                      label={title}
+                      label={projects[id].title}
                       {...a11yProps(index)}
                       onClick={() => handleTabClick(index)}
                       {...provided.draggableProps}
@@ -139,28 +115,14 @@ function Projects() {
           )}
         </Droppable>
       </DragDropContext>
-      {projects.map((project, index) => (
+      {projectsOrder.map((id, index) => (
         <TabPanel
-          key={project.id}
-          value={active}
-          index={index}
+          active={active}
           className={classes.tabpanel}
+          index={index}
+          key={id}
         >
-          <Project
-            project={project}
-            setProject={(updatedProject) =>
-              setAndStoreProjects(
-                projects.map((project) =>
-                  project.id === updatedProject.id
-                    ? { ...updatedProject, list: [...updatedProject.list] }
-                    : project
-                )
-              )
-            }
-            projects={projects}
-            setProjects={setAndStoreProjects}
-            setActive={setAndStoreActive}
-          />
+          <Project project={projects[id]} />
         </TabPanel>
       ))}
     </div>
